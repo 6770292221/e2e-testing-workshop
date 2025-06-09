@@ -1,0 +1,22 @@
+{
+  "name": "e2e-testing-workshop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/6770292221/e2e-testing-workshop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/6770292221/e2e-testing-workshop/issues"
+  },
+  "homepage": "https://github.com/6770292221/e2e-testing-workshop#readme",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.30"
+  }
+}
