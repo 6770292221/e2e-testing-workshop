@@ -2,72 +2,61 @@ import { test, expect } from "@playwright/test";
 import { HomePage } from "../pages/HomePage";
 import { ProductPage } from "../pages/ProductPage";
 import { ProductPageExpected } from "../fixtures/expectedResult/product.expect";
+import { ProductTestData } from "../fixtures/testData/product.data";
 
-/**
- * TC-001  ค้นหาสินค้าที่มีผลลัพธ์เดียว
- */
-test("Search Product - Single Result", async ({ page }) => {
-  const home = new HomePage(page);
-  const product = new ProductPage(page);
+test.describe("Search Product Feature", () => {
+  let home: HomePage;
+  let product: ProductPage;
 
-  const name = "little girls mr. panda shirt";
-  const expectedCount = 1;
+  test.beforeEach(async ({ page }) => {
+    home = new HomePage(page);
+    product = new ProductPage(page);
 
-  await home.navigateToHome();
-  await home.verifyHomePageVisible();
-  await home.clickProductsMenu();
+    await home.navigateToHome();
+    await home.verifyHomePageVisible();
+    await home.clickProductsMenu();
+    await product.verifyProductPageTitle(ProductPageExpected.allProductsTitle);
+  });
 
-  await product.verifyProductPageTitle(ProductPageExpected.allProductsTitle);
-  await product.searchProduct(name);
-  await product.verifyProductPageTitle(
-    ProductPageExpected.searchedProductsTitle
-  );
-  await product.verifySearchResultCount(expectedCount);
-  await product.verifySearchedProductName(name); // ตรงชื่อ 100 %
-});
+  test.afterEach(async ({ page }, testInfo) => {
+    if (testInfo.status !== testInfo.expectedStatus) {
+      await page.screenshot({
+        path: `screenshots/${testInfo.title}.png`,
+        fullPage: true,
+      });
+      console.log(`Test failed: ${testInfo.title}`);
+    }
+  });
 
-/**
- * TC-002  ค้นหาด้วยคีย์เวิร์ดที่ตรง “บางส่วน” แล้วได้หลายผล
- */
-test("Search Product - Multiple Results", async ({ page }) => {
-  const home = new HomePage(page);
-  const product = new ProductPage(page);
+  test("TC-001 - Search Product - Single Result", async () => {
+    const { productName, expectedCount } = ProductTestData.singleResult;
 
-  const name = "Top";
-  const expectedCount = 14;
+    await product.searchProduct(productName);
+    await product.verifyProductPageTitle(
+      ProductPageExpected.searchedProductsTitle
+    );
+    await product.verifySearchResultCount(expectedCount);
+    await product.verifySearchedProductName(productName);
+  });
 
-  await home.navigateToHome();
-  await home.verifyHomePageVisible();
-  await home.clickProductsMenu();
+  test("TC-002 - Search Product - Multiple Results", async () => {
+    const { productName, expectedCount } = ProductTestData.multipleResults;
 
-  await product.verifyProductPageTitle(ProductPageExpected.allProductsTitle);
-  await product.searchProduct(name);
-  await product.verifyProductPageTitle(
-    ProductPageExpected.searchedProductsTitle
-  );
-  await product.verifySearchResultCount(expectedCount);
-  await product.verifySearchedProductName(name);
-});
+    await product.searchProduct(productName);
+    await product.verifyProductPageTitle(
+      ProductPageExpected.searchedProductsTitle
+    );
+    await product.verifySearchResultCount(expectedCount);
+    await product.verifySearchedProductName(productName);
+  });
 
-/**
- * TC-003  ค้นหาสินค้าที่ “ไม่มีในระบบ” แล้วต้องแสดง empty-state ถูกต้อง
- */
+  test("TC-003 - Search Product - No Result", async () => {
+    const { productName, expectedCount } = ProductTestData.noResult;
 
-test("Search Product - No Result", async ({ page }) => {
-  const home = new HomePage(page);
-  const product = new ProductPage(page);
-
-  const name = "XXXX";
-  const expectedCount = 0;
-
-  await home.navigateToHome();
-  await home.verifyHomePageVisible();
-  await home.clickProductsMenu();
-
-  await product.verifyProductPageTitle(ProductPageExpected.allProductsTitle);
-  await product.searchProduct(name);
-  await product.verifyProductPageTitle(
-    ProductPageExpected.searchedProductsTitle
-  );
-  await product.verifySearchResultCount(expectedCount);
+    await product.searchProduct(productName);
+    await product.verifyProductPageTitle(
+      ProductPageExpected.searchedProductsTitle
+    );
+    await product.verifySearchResultCount(expectedCount);
+  });
 });
