@@ -30,5 +30,5 @@ export const SignupPageLocator = {
   createAccountButton: '[data-qa="create-account"]',
 
   // --- Step 13: Continue ---
-  continueButton: 'a[data-qa="continue-button"], .btn.btn-primary', // เผื่อ fallback
+  continueButton: 'a[data-qa="continue-button"], .btn.btn-primary',
 };
