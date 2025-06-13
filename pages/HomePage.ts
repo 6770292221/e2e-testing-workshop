@@ -26,4 +26,8 @@ export class HomePage {
     const locator = this.page.locator(HomePageLocator.loggedInText);
     await expect(locator).toContainText(`Logged in as ${username}`);
   }
+
+  async clickProductsMenu() {
+    await this.page.click(HomePageLocator.productsMenu);
+  }
 }

@@ -4,4 +4,5 @@ export const HomePageLocator = {
 
   deleteAccountButton: 'a:has-text("Delete Account")',
   loggedInText: 'a:has-text("Logged in as")',
+  productsMenu: 'a[href="/products"]',
 };
